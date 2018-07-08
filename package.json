@@ -1,5 +1,6 @@
 {
   "name": "@macklinu/matches",
+  "description": "Simplify deep object comparisons",
   "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
