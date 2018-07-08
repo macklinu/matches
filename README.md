@@ -159,7 +159,7 @@ import matches from '@macklinu/matches'
 const isPromiseFunctionNode = matches({
   type: 'CallExpression',
   'callee.type': 'MemberExpression',
-  'callee.property.name': name: => name === 'then' || name === 'catch',
+  'callee.property.name': name => name === 'then' || name === 'catch',
 })
 
 isPromiseFunctionNode({
