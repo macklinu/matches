@@ -8,6 +8,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [API](#api)
+  - [`matches(predicateObject)`](#matchespredicateobject)
 - [Examples](#examples)
 - [Tradeoffs](#tradeoffs)
 - [Development](#development)
@@ -17,6 +19,85 @@
   - [`yarn bench`](#yarn-bench)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## API
+
+### `matches(predicateObject)`
+
+Returns a function that returns a boolean.
+
+```js
+let isHuman = matches({
+  type: 'human',
+})
+
+isHuman({ type: 'human' }) // => true
+isHuman({ type: 'animal' }) // => false
+```
+
+The `predicateObject` parameter must be flat, meaning it can only have one level
+of key-values. You can access nested objects by using dot notation like so:
+
+```js
+let isJohnDoe = matches({
+  'name.first': 'John',
+  'name.last': 'Doe',
+})
+
+isJohnDoe({ name: { first: 'John', last: 'Doe' } }) // => true
+```
+
+This also allows you to access and check values within an array:
+
+```js
+let isNewPromiseCallback = matches({
+  type: 'ArrowFunctionExpression',
+  'callee.name': 'Promise',
+  'params.0.name': 'resolve',
+  'params.1.name': 'reject',
+})
+
+isNewPromiseCallback({
+  type: 'ArrowFunctionExpression',
+  callee: { type: 'Identifier', name: 'Promise' },
+  params: [
+    { type: 'Identifier', name: 'resolve' },
+    { type: 'Identifier', name: 'reject' },
+  ],
+}) // => true
+```
+
+`predicateObject` keys are strings, but values can be any of the following:
+
+- a regular expression
+
+```js
+let isDog = matches({
+  breed: /shepherd|poodle|beagle/,
+})
+
+isDog({ breed: 'poodle' }) // => true
+```
+
+- a predicate function: `(value: any) => boolean`
+
+```js
+let isLeapYear = matches({
+  date: value => moment(value).isLeapYear(),
+})
+
+isLeapYear({ date: '2000-01-01' }) // => true
+```
+
+- any literal value (uses === equality checking)
+
+```js
+let isHungry = matches({
+  hungry: true,
+})
+
+hasNoMoney({ hungry: true }) // => true
+```
 
 ## Examples
 
@@ -98,6 +179,8 @@ isPromiseFunctionNode({
 - ✅ May improve clarity as an alternative to writing many if statements in a
   function
 - ❌ Slower execution than a plain old function
+- 🤷‍♂️ Still can execute millions of times per second per the benchmark, so
+  probably not a big deal unless you _really_ need blazing speeds
 
 ## Development
 
