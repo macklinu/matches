@@ -13,7 +13,8 @@
     "precommit": "lint-staged",
     "prebench": "yarn build",
     "bench": "node bench",
-    "build": "rimraf dist && babel src -d dist --ignore *.test.js",
+    "prebuild": "rimraf dist",
+    "build": "babel src -d dist --ignore *.test.js",
     "test": "jest"
   },
   "devDependencies": {
