@@ -8,32 +8,20 @@ test.each([null, false, 42, 'any string', undefined, [1, 2, 3]])(
   }
 )
 
-test.each([
-  [{}, {}, true],
-  [
-    {
-      type: 'CallExpression',
-      'callee.type': 'MemberExpression',
-      'callee.property.name': name => name === 'then' || name === 'catch',
-    },
-    {
-      type: 'CallExpression',
-      callee: {
-        type: 'MemberExpression',
-        property: {
-          name: 'then',
-        },
-      },
-    },
-    true,
-  ],
-  [
-    {
-      type: 'CallExpression',
-      'callee.type': 'MemberExpression',
-      'callee.property.name': /then|catch/,
-    },
-    {
+test('returns true when predicate and value are empty objects', () => {
+  let isMatch = matches({})
+  expect(isMatch({})).toBe(true)
+})
+
+test('supports predicate function matchers', () => {
+  let isMatch = matches({
+    type: 'CallExpression',
+    'callee.type': 'MemberExpression',
+    'callee.property.name': name => name === 'then' || name === 'catch',
+  })
+
+  expect(
+    isMatch({
       type: 'CallExpression',
       callee: {
         type: 'MemberExpression',
@@ -41,21 +29,40 @@ test.each([
           name: 'then',
         },
       },
-    },
-    true,
-  ],
-  [
-    {
-      type: /FunctionExpression|ArrowFunctionExpression/,
-      'params.0.name': /err|error/,
-    },
-    {
+    })
+  ).toBe(true)
+})
+
+test('supports regular expression matchers', () => {
+  let isMatch = matches({
+    type: 'CallExpression',
+    'callee.type': 'MemberExpression',
+    'callee.property.name': /then|catch/,
+  })
+
+  expect(
+    isMatch({
+      type: 'CallExpression',
+      callee: {
+        type: 'MemberExpression',
+        property: {
+          name: 'then',
+        },
+      },
+    })
+  ).toBe(true)
+})
+
+test('supports accessing item in array by index', () => {
+  let isMatch = matches({
+    type: /FunctionExpression|ArrowFunctionExpression/,
+    'params.0.name': /err|error/,
+  })
+
+  expect(
+    isMatch({
       type: 'FunctionExpression',
       params: [{ name: 'err' }],
-    },
-    true,
-  ],
-])('matches(%p, %o) === %p', (predicate, value, expected) => {
-  let isMatch = matches(predicate)
-  expect(isMatch(value)).toBe(expected)
+    })
+  ).toBe(true)
 })
