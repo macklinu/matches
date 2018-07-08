@@ -1,6 +1,3 @@
-import is from './is'
-import get from './get'
-
 export default function matches(predicate = {}) {
   return object => {
     if (!is.object(object)) {
@@ -22,4 +19,22 @@ function equals(actual, predicate) {
     return predicate.test(actual)
   }
   return predicate === actual
+}
+
+let toString = {}.toString
+let type = value =>
+  toString
+    .call(value)
+    .slice(8, -1)
+    .toLowerCase()
+
+let is = ['object', 'function', 'regexp'].reduce(
+  (obj, fn) => ({ [fn]: value => type(value) === fn, ...obj }),
+  {}
+)
+
+function get(obj, path, fallback) {
+  return (
+    path.split('.').reduce((a, b) => (a && a[b] ? a[b] : null), obj) || fallback
+  )
 }
