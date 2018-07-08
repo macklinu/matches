@@ -67,6 +67,52 @@ test('supports accessing item in array by index', () => {
   ).toBe(true)
 })
 
+test('composing matchers', () => {
+  let isPromiseInstanceMethod = matches({
+    type: 'CallExpression',
+    'callee.type': 'MemberExpression',
+    'callee.property.name': /then|catch|finally/,
+  })
+  let isPromiseStatic = matches({
+    type: 'CallExpression',
+    'callee.type': 'MemberExpression',
+    'callee.object.type': 'Identifier',
+    'callee.object.name': 'Promise',
+    'callee.property.name': /all|race|reject|resolve/,
+  })
+  let isPromise = node => isPromiseInstanceMethod(node) || isPromiseStatic(node)
+
+  expect(
+    isPromise({
+      type: 'CallExpression',
+      callee: {
+        type: 'MemberExpression',
+        property: {
+          name: 'then',
+        },
+      },
+    })
+  ).toBe(true)
+
+  expect(
+    isPromise({
+      type: 'CallExpression',
+      callee: {
+        type: 'MemberExpression',
+        object: {
+          type: 'Identifier',
+          name: 'Promise',
+        },
+        property: {
+          name: 'reject',
+        },
+      },
+    })
+  ).toBe(true)
+
+  expect(isPromise({})).toBe(false)
+})
+
 test('advanced array checking can be done with predicate matcher', () => {
   let isMatch = matches({
     items: (items = []) =>
