@@ -1,11 +1,14 @@
 {
   "name": "@macklinu/matches",
   "version": "0.0.0",
+  "license": "MIT",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
-  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
   "scripts": {
     "prebench": "yarn build",
     "bench": "node bench",
