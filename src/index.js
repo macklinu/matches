@@ -4,7 +4,9 @@ import get from './get'
 
 export default function matches(predicate = {}) {
   return object => {
-    return Object.entries(flatten(predicate)).every(([key, value]) => {
+    let flattened = flatten(predicate)
+    return Object.keys(flattened).every(key => {
+      let value = flattened[key]
       let actualValue = get(object, key)
       return is.function(value)
         ? value(actualValue)
