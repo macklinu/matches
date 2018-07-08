@@ -57,6 +57,17 @@ test.each([
     },
     true,
   ],
+  [
+    {
+      type: /FunctionExpression|ArrowFunctionExpression/,
+      'params.0.name': /err|error/,
+    },
+    {
+      type: 'FunctionExpression',
+      params: [{ name: 'err' }],
+    },
+    true,
+  ],
 ])('matches(%p, %o) === %p', (predicate, value, expected) => {
   let isMatch = matches(predicate)
   expect(isMatch(value)).toBe(expected)
