@@ -4,13 +4,19 @@ import get from './get'
 export default function matches(predicate = {}) {
   return object => {
     return Object.keys(predicate).every(key => {
-      let value = predicate[key]
+      let predicateValue = predicate[key]
       let actualValue = get(object, key)
-      return is.function(value)
-        ? value(actualValue)
-        : is.regexp(value)
-          ? value.test(actualValue)
-          : value === actualValue
+      return equals(actualValue, predicateValue)
     })
   }
+}
+
+function equals(actual, predicate) {
+  if (is.function(predicate)) {
+    return predicate(actual)
+  }
+  if (is.regexp(predicate)) {
+    return predicate.test(actual)
+  }
+  return predicate === actual
 }
