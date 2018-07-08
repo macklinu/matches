@@ -1,5 +1,13 @@
 import matches from '.'
 
+test.each([null, false, 42, 'any string', undefined, [1, 2, 3]])(
+  'returns false when matching against %p',
+  value => {
+    let isMatch = matches({})
+    expect(isMatch(value)).toBe(false)
+  }
+)
+
 test.each([
   [{}, {}, true],
   [

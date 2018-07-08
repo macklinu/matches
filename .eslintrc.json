@@ -10,6 +10,7 @@
   "plugins": ["prettier", "jest"],
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "rules": {
+    "curly": "error",
     "eqeqeq": "error",
     "prettier/prettier": "error"
   }
