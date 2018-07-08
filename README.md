@@ -8,18 +8,84 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Motivation](#motivation)
 - [Installation](#installation)
 - [API](#api)
   - [`matches(predicateObject)`](#matchespredicateobject)
-- [Examples](#examples)
 - [Tradeoffs](#tradeoffs)
 - [Development](#development)
   - [`yarn`](#yarn)
   - [`yarn test`](#yarn-test)
   - [`yarn build`](#yarn-build)
   - [`yarn bench`](#yarn-bench)
+- [Contributing](#contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Motivation
+
+When writing ESLint plugins, there are a lot of deep object checking functions
+like this:
+
+```js
+function isPromiseFunctionNode(node) {
+  if (node.type !== 'CallExpression') {
+    return false
+  }
+  if (node.callee.type !== 'MemberExpression') {
+    return false
+  }
+  let propertyName = node.callee.property.name
+  return propertyName === 'then' || propertyName === 'catch'
+}
+
+let nodeFromAst = {
+  type: 'CallExpression',
+  callee: {
+    type: 'MemberExpression',
+    property: {
+      name: 'then',
+    },
+  },
+}
+
+isPromiseFunctionNode(nodeFromAst) // => true
+```
+
+Sometimes object properties are not present, or their values are undefined, and
+you are forced to write overly defensive code as a result.
+
+Instead, my dream is to write safe, nested object checks using a schema-like
+syntax:
+
+```js
+import matches from '@macklinu/matches'
+
+let isPromiseFunctionNode = matches({
+  type: 'CallExpression',
+  'callee.type': 'MemberExpression',
+  'callee.property.name': /then|catch/,
+})
+
+let nodeFromAst = {
+  type: 'CallExpression',
+  callee: {
+    type: 'MemberExpression',
+    property: {
+      name: 'then',
+    },
+  },
+}
+
+isPromiseFunctionNode(nodeFromAst) // => true
+```
+
+Using this library, I can write the same check in a safe, declarative way while
+leveraging the power of
+[regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+and predicate functions.
+
+If you're curious to learn more, please read on and give this library a try! 🙂
 
 ## Installation
 
@@ -84,7 +150,16 @@ isNewPromiseCallback({
 }) // => true
 ```
 
-`predicateObject` keys are strings, but values can be any of the following:
+The `predicateObject` type is the following:
+
+```ts
+type PredicateObject = {
+  [pathToKey: string]: Regexp | (value: any) => boolean | any
+}
+```
+
+`predicateObject` keys are strings (the dot-separated path to a value within an
+object). The corresponding values can be any of the following:
 
 - a regular expression
 
@@ -110,85 +185,10 @@ isLeapYear({ date: '2000-01-01' }) // => true
 
 ```js
 let isHungry = matches({
-  hungry: true,
+  'attributes.hungerLevel': 10, // out of 10
 })
 
-hasNoMoney({ hungry: true }) // => true
-```
-
-## Examples
-
-Take this standard deep object check (e.g. writing an ESLint plugin):
-
-```js
-function isPromiseFunctionNode(node) {
-  if (node.type !== 'CallExpression') {
-    return false
-  }
-  if (node.callee.type !== 'MemberExpression') {
-    return false
-  }
-  const propertyName = node.callee.property.name
-  return propertyName === 'then' || propertyName === 'catch'
-}
-
-isPromiseFunctionNode({
-  type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: 'then',
-    },
-  },
-})
-// => true
-```
-
-What if you could safely check an object with a schema-like object syntax
-instead? Well now you can!
-
-```js
-import matches from '@macklinu/matches'
-
-const isPromiseFunctionNode = matches({
-  type: 'CallExpression',
-  'callee.type': 'MemberExpression',
-  'callee.property.name': /then|catch/,
-})
-
-isPromiseFunctionNode({
-  type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: 'then',
-    },
-  },
-})
-// => true
-```
-
-Use predicate functions!
-
-```js
-import matches from '@macklinu/matches'
-
-const isPromiseFunctionNode = matches({
-  type: 'CallExpression',
-  'callee.type': 'MemberExpression',
-  'callee.property.name': name => name === 'then' || name === 'catch',
-})
-
-isPromiseFunctionNode({
-  type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: 'then',
-    },
-  },
-})
-// => true
+isHungry({ attributes: { hungerLevel: 10 } }) // => true
 ```
 
 ## Tradeoffs
@@ -218,3 +218,10 @@ Compiles the code with Babel and outputs to `dist/` for publishing to npm.
 
 Runs benchmarks to show that, while this is a cool idea, my implementation is
 magnitudes slower than just writing code like a normal human being.
+
+## Contributing
+
+Feature requests, documentation updates, and questions are more than welcome
+[in an issue](https://github.com/macklinu/matches/issues/new). I'm not sure what
+other features or changes I'd like to make to this library at the moment but am
+happy to discuss. 🙂
