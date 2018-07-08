@@ -66,3 +66,26 @@ test('supports accessing item in array by index', () => {
     })
   ).toBe(true)
 })
+
+test('advanced array checking can be done with predicate matcher', () => {
+  let isMatch = matches({
+    items: (items = []) =>
+      items.length >= 2 && items.indexOf('apple') > 0 && items[0].price > 0,
+  })
+
+  expect(
+    isMatch({
+      items: [
+        {
+          price: 10,
+          name: 'chicken',
+        },
+        'apple',
+        'banana',
+        null,
+        42,
+      ],
+    })
+  ).toBe(true)
+  expect(isMatch({})).toBe(false)
+})
