@@ -1,12 +1,10 @@
 import is from './is'
-import flatten from './flatten'
 import get from './get'
 
 export default function matches(predicate = {}) {
   return object => {
-    let flattened = flatten(predicate)
-    return Object.keys(flattened).every(key => {
-      let value = flattened[key]
+    return Object.keys(predicate).every(key => {
+      let value = predicate[key]
       let actualValue = get(object, key)
       return is.function(value)
         ? value(actualValue)

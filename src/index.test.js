@@ -38,27 +38,6 @@ test.each([
   ],
   [
     {
-      type: 'CallExpression',
-      callee: {
-        type: 'MemberExpression',
-        property: {
-          name: /then|catch/,
-        },
-      },
-    },
-    {
-      type: 'CallExpression',
-      callee: {
-        type: 'MemberExpression',
-        property: {
-          name: 'then',
-        },
-      },
-    },
-    true,
-  ],
-  [
-    {
       type: /FunctionExpression|ArrowFunctionExpression/,
       'params.0.name': /err|error/,
     },

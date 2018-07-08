@@ -49,19 +49,13 @@ isPromiseFunctionNode({
 What if you could safely check an object with a schema-like object syntax
 instead? Well now you can!
 
-Use regular expressions!
-
 ```js
 import matches from '@macklinu/matches'
 
 const isPromiseFunctionNode = matches({
   type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: /then|catch/,
-    },
-  },
+  'callee.type': 'MemberExpression',
+  'callee.property.name': /then|catch/,
 })
 
 isPromiseFunctionNode({
@@ -83,35 +77,8 @@ import matches from '@macklinu/matches'
 
 const isPromiseFunctionNode = matches({
   type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: name => name === 'then' || name === 'catch',
-    },
-  },
-})
-
-isPromiseFunctionNode({
-  type: 'CallExpression',
-  callee: {
-    type: 'MemberExpression',
-    property: {
-      name: 'then',
-    },
-  },
-})
-// => true
-```
-
-Use a flattened object (if that's easier to read)!
-
-```js
-import matches from '@macklinu/matches'
-
-const isPromiseFunctionNode = matches({
-  type: 'CallExpression',
   'callee.type': 'MemberExpression',
-  'callee.property.name': /then|catch/,
+  'callee.property.name': name: => name === 'then' || name === 'catch',
 })
 
 isPromiseFunctionNode({
