@@ -7,6 +7,8 @@
   ],
   "license": "MIT",
   "scripts": {
+    "prebench": "yarn build",
+    "bench": "node bench",
     "build": "rimraf dist && babel src -d dist --ignore *.test.js",
     "test": "jest"
   },
@@ -17,6 +19,7 @@
     "babel-jest": "^23.2.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "benchmark": "^2.1.4",
     "eslint": "^5.0.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-jest": "^21.17.0",
