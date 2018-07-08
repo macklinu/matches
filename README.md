@@ -8,6 +8,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Installation](#installation)
 - [API](#api)
   - [`matches(predicateObject)`](#matchespredicateobject)
 - [Examples](#examples)
@@ -19,6 +20,22 @@
   - [`yarn bench`](#yarn-bench)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Installation
+
+```sh
+$ yarn add @macklinu/matches
+```
+
+Then import the function into your codebase:
+
+```js
+import matches from '@macklinu/matches'
+
+// or
+
+const matches = require('@macklinu/matches')
+```
 
 ## API
 

@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
+
 const Benchmark = require('benchmark')
-const matches = require('../dist').default
+const matches = require('../dist')
 
 const suite = new Benchmark.Suite()
 
