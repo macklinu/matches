@@ -1,7 +1,16 @@
 language: node_js
-cache: yarn
+cache:
+  yarn: true
+notifications:
+  email: false
 node_js:
-  - 6
-  - 8
   - 10
-
+  - 8
+  - 6
+install:
+  - yarn install --ignore-engines
+after_success:
+  - npm run travis-deploy-once "npm run semantic-release"
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/

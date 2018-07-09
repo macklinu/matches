@@ -1,8 +1,23 @@
 {
   "name": "@macklinu/matches",
   "description": "Simplify deep object comparisons",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "license": "MIT",
+  "author": {
+    "name": "Macklin Underdown",
+    "email": "macklinu@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/macklinu/matches/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macklinu/matches.git"
+  },
+  "homepage": "https://github.com/macklinu/matches",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -12,11 +27,14 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "prebench": "yarn build",
+    "prebench": "npm run build",
     "bench": "node bench",
     "prebuild": "rimraf dist",
     "build": "babel src -d dist --ignore *.test.js",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -37,6 +55,8 @@
     "jest-runner-eslint": "^0.6.0",
     "lint-staged": "^7.2.0",
     "prettier": "^1.13.7",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "travis-deploy-once": "^5.0.1",
+    "semantic-release": "^15.6.3"
   }
 }
