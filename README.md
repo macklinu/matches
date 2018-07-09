@@ -109,6 +109,39 @@ const matches = require('@macklinu/matches')
 
 Returns a function that returns a boolean.
 
+The `predicateObject` type is the following:
+
+```ts
+type PredicateObject = {
+  [pathToKey: string]: Regexp | (value: any) => boolean | any
+}
+```
+
+`predicateObject` keys are strings (the dot-separated path to a value within an
+object). The corresponding values can be any of the following:
+
+- a regular expression
+
+```js
+let isDog = matches({
+  breed: /shepherd|poodle|beagle/,
+})
+
+isDog({ breed: 'poodle' }) // => true
+```
+
+- a predicate function: `(value: any) => boolean`
+
+```js
+let isLeapYear = matches({
+  date: value => moment(value).isLeapYear(),
+})
+
+isLeapYear({ date: '2000-01-01' }) // => true
+```
+
+- any literal value (uses === equality checking)
+
 ```js
 let isHuman = matches({
   type: 'human',
@@ -148,47 +181,6 @@ isNewPromiseCallback({
     { type: 'Identifier', name: 'reject' },
   ],
 }) // => true
-```
-
-The `predicateObject` type is the following:
-
-```ts
-type PredicateObject = {
-  [pathToKey: string]: Regexp | (value: any) => boolean | any
-}
-```
-
-`predicateObject` keys are strings (the dot-separated path to a value within an
-object). The corresponding values can be any of the following:
-
-- a regular expression
-
-```js
-let isDog = matches({
-  breed: /shepherd|poodle|beagle/,
-})
-
-isDog({ breed: 'poodle' }) // => true
-```
-
-- a predicate function: `(value: any) => boolean`
-
-```js
-let isLeapYear = matches({
-  date: value => moment(value).isLeapYear(),
-})
-
-isLeapYear({ date: '2000-01-01' }) // => true
-```
-
-- any literal value (uses === equality checking)
-
-```js
-let isHungry = matches({
-  'attributes.hungerLevel': 10, // out of 10
-})
-
-isHungry({ attributes: { hungerLevel: 10 } }) // => true
 ```
 
 ## Tradeoffs
