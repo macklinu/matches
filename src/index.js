@@ -4,8 +4,8 @@ export default function matches(predicate = {}) {
       return false
     }
     return Object.keys(predicate).every(key => {
-      let predicateValue = predicate[key]
-      let actualValue = get(object, key)
+      const predicateValue = predicate[key]
+      const actualValue = get(object, key)
       return equals(actualValue, predicateValue)
     })
   }
@@ -21,14 +21,14 @@ function equals(actual, predicate) {
   return predicate === actual
 }
 
-let toString = {}.toString
-let type = value =>
+const toString = {}.toString
+const type = value =>
   toString
     .call(value)
     .slice(8, -1)
     .toLowerCase()
 
-let is = ['object', 'function', 'regexp'].reduce(
+const is = ['object', 'function', 'regexp'].reduce(
   (obj, fn) => ({ [fn]: value => type(value) === fn, ...obj }),
   {}
 )

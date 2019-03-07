@@ -3,18 +3,18 @@ import matches from '.'
 test.each([null, false, 42, 'any string', undefined, [1, 2, 3]])(
   'returns false when matching against %p',
   value => {
-    let isMatch = matches({})
+    const isMatch = matches({})
     expect(isMatch(value)).toBe(false)
   }
 )
 
 test('returns true when predicate and value are empty objects', () => {
-  let isMatch = matches({})
+  const isMatch = matches({})
   expect(isMatch({})).toBe(true)
 })
 
 test('supports predicate function matchers', () => {
-  let isMatch = matches({
+  const isMatch = matches({
     type: 'CallExpression',
     'callee.type': 'MemberExpression',
     'callee.property.name': name => name === 'then' || name === 'catch',
@@ -34,7 +34,7 @@ test('supports predicate function matchers', () => {
 })
 
 test('supports regular expression matchers', () => {
-  let isMatch = matches({
+  const isMatch = matches({
     type: 'CallExpression',
     'callee.type': 'MemberExpression',
     'callee.property.name': /then|catch/,
@@ -54,7 +54,7 @@ test('supports regular expression matchers', () => {
 })
 
 test('supports accessing item in array by index', () => {
-  let isMatch = matches({
+  const isMatch = matches({
     type: /FunctionExpression|ArrowFunctionExpression/,
     'params.0.name': /err|error/,
   })
@@ -68,19 +68,20 @@ test('supports accessing item in array by index', () => {
 })
 
 test('composing matchers', () => {
-  let isPromiseInstanceMethod = matches({
+  const isPromiseInstanceMethod = matches({
     type: 'CallExpression',
     'callee.type': 'MemberExpression',
     'callee.property.name': /then|catch|finally/,
   })
-  let isPromiseStatic = matches({
+  const isPromiseStatic = matches({
     type: 'CallExpression',
     'callee.type': 'MemberExpression',
     'callee.object.type': 'Identifier',
     'callee.object.name': 'Promise',
     'callee.property.name': /all|race|reject|resolve/,
   })
-  let isPromise = node => isPromiseInstanceMethod(node) || isPromiseStatic(node)
+  const isPromise = node =>
+    isPromiseInstanceMethod(node) || isPromiseStatic(node)
 
   expect(
     isPromise({
@@ -114,7 +115,7 @@ test('composing matchers', () => {
 })
 
 test('advanced array checking can be done with predicate matcher', () => {
-  let isMatch = matches({
+  const isMatch = matches({
     items: (items = []) =>
       items.length >= 2 && items.indexOf('apple') > 0 && items[0].price > 0,
   })
