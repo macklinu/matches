@@ -7,7 +7,7 @@ const suite = new Benchmark.Suite()
 
 suite
   .add('matches() - checks all', () => {
-    let isPromiseFunctionNode = matches({
+    const isPromiseFunctionNode = matches({
       type: 'CallExpression',
       callee: {
         type: 'MemberExpression',
@@ -50,7 +50,7 @@ suite
     })
   })
   .add('matches() - exit early', () => {
-    let isPromiseFunctionNode = matches({
+    const isPromiseFunctionNode = matches({
       type: 'CallExpression',
       callee: {
         type: 'MemberExpression',
